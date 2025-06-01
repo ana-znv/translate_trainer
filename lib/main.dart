@@ -12,6 +12,13 @@ class TranslateTrainer extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        textTheme: TextTheme(
+          bodyMedium: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         scaffoldBackgroundColor: const Color.fromARGB(255, 18, 18, 18),
       ),
@@ -28,8 +35,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  WidgetStateProperty<Color> buttonBackgroundColor = WidgetStateProperty.all(
+    Color.fromARGB(255, 134, 110, 254),
+  );
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 18, 18, 18),
@@ -41,6 +53,54 @@ class _MainPageState extends State<MainPage> {
           Padding(padding: EdgeInsets.only(right: 20)),
         ],
         centerTitle: false,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 50,
+              width: 280,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: buttonBackgroundColor,
+                  foregroundColor: WidgetStateProperty.all(Colors.amber),
+                ),
+                child: Text("Add Sentence", style: theme.textTheme.bodyMedium),
+              ),
+            ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+            SizedBox(
+              height: 50,
+              width: 280,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: buttonBackgroundColor,
+                  foregroundColor: WidgetStateProperty.all(Colors.amber),
+                ),
+                child: Text("All Senteces", style: theme.textTheme.bodyMedium),
+              ),
+            ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+            SizedBox(
+              height: 50,
+              width: 280,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: buttonBackgroundColor,
+                  foregroundColor: WidgetStateProperty.all(Colors.amber),
+                ),
+                child: Text(
+                  "Start training",
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
