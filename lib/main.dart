@@ -12,6 +12,9 @@ class TranslateTrainer extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: const Color.fromARGB(255, 18, 18, 18),
+        ),
         textTheme: TextTheme(
           bodyMedium: TextStyle(
             color: Colors.white,
@@ -22,19 +25,23 @@ class TranslateTrainer extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         scaffoldBackgroundColor: const Color.fromARGB(255, 18, 18, 18),
       ),
-      home: const MainPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const MainScreen(),
+        '/second': (context) => const AddSentenceScreen(),
+      },
     );
   }
 }
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainScreenState extends State<MainScreen> {
   WidgetStateProperty<Color> buttonBackgroundColor = WidgetStateProperty.all(
     Color.fromARGB(255, 134, 110, 254),
   );
@@ -44,7 +51,6 @@ class _MainPageState extends State<MainPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 18, 18, 18),
         title: Text("Translate Trainer", style: TextStyle(color: Colors.white)),
         actions: [
           Icon(Icons.search, color: Colors.white),
@@ -62,11 +68,10 @@ class _MainPageState extends State<MainPage> {
               height: 50,
               width: 280,
               child: ElevatedButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                  backgroundColor: buttonBackgroundColor,
-                  foregroundColor: WidgetStateProperty.all(Colors.amber),
-                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/second');
+                },
+                style: ButtonStyle(backgroundColor: buttonBackgroundColor),
                 child: Text("Add Sentence", style: theme.textTheme.bodyMedium),
               ),
             ),
@@ -76,10 +81,7 @@ class _MainPageState extends State<MainPage> {
               width: 280,
               child: ElevatedButton(
                 onPressed: () {},
-                style: ButtonStyle(
-                  backgroundColor: buttonBackgroundColor,
-                  foregroundColor: WidgetStateProperty.all(Colors.amber),
-                ),
+                style: ButtonStyle(backgroundColor: buttonBackgroundColor),
                 child: Text("All Senteces", style: theme.textTheme.bodyMedium),
               ),
             ),
@@ -89,10 +91,7 @@ class _MainPageState extends State<MainPage> {
               width: 280,
               child: ElevatedButton(
                 onPressed: () {},
-                style: ButtonStyle(
-                  backgroundColor: buttonBackgroundColor,
-                  foregroundColor: WidgetStateProperty.all(Colors.amber),
-                ),
+                style: ButtonStyle(backgroundColor: buttonBackgroundColor),
                 child: Text(
                   "Start training",
                   style: theme.textTheme.bodyMedium,
@@ -101,6 +100,25 @@ class _MainPageState extends State<MainPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AddSentenceScreen extends StatelessWidget {
+  const AddSentenceScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
+        title: Text("Add sentence", style: TextStyle(color: Colors.white)),
       ),
     );
   }
