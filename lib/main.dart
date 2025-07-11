@@ -19,11 +19,17 @@ class TranslateTrainer extends StatelessWidget {
         textTheme: TextTheme(
           titleMedium: TextStyle(
             color: const Color.fromARGB(255, 213, 213, 213),
-            fontSize: 24,
+            fontSize: 26,
           ),
+          bodyMedium: TextStyle(color: Colors.white, fontSize: 22),
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: const Color.fromARGB(255, 32, 32, 32),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 46, 46, 46),
+          ),
         ),
       ),
       home: const HomeScreen(),
@@ -46,6 +52,49 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Translate Trainer", style: theme.textTheme.titleMedium),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 50,
+              width: 300,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("Add Sentence", style: theme.textTheme.bodyMedium),
+              ),
+            ),
+
+            Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+
+            SizedBox(
+              height: 50,
+              width: 300,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text(
+                  "List of Sentences",
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+
+            Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+
+            SizedBox(
+              height: 50,
+              width: 300,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text(
+                  "Start Training",
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
