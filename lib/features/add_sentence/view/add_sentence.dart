@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AddSentence extends StatefulWidget {
   const AddSentence({super.key});
@@ -9,6 +11,39 @@ class AddSentence extends StatefulWidget {
 
 class _AddSentenceState extends State<AddSentence> {
   final _formKey = GlobalKey<FormState>();
+
+  late Database db;
+  final nativeController = TextEditingController();
+  final foreignController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    initDb();
+  }
+
+  Future<void> initDb() async {
+    db = await openDatabase(
+      join(await getDatabasesPath(), 'sentence_database.db'),
+
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE sentences(id INTEGER PRIMARY KEY, nativeSentence TEXT, foreignSentence TEXT)',
+        );
+      },
+      version: 1,
+    );
+  }
+
+  Future<void> insertSentence(
+    String nativeSentence,
+    String foreignSentence,
+  ) async {
+    await db.insert('sentences', {
+      'nativeSentence': nativeSentence,
+      'foreignSentence': foreignSentence,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +62,7 @@ class _AddSentenceState extends State<AddSentence> {
               child: SizedBox(
                 width: 400,
                 child: TextField(
+                  controller: nativeController,
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
@@ -46,6 +82,7 @@ class _AddSentenceState extends State<AddSentence> {
               child: SizedBox(
                 width: 400,
                 child: TextField(
+                  controller: foreignController,
                   autocorrect: false,
                   enableSuggestions: false,
                   maxLines: null,
@@ -62,14 +99,22 @@ class _AddSentenceState extends State<AddSentence> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
+                onPressed: () async {
+                  if (nativeController.text.isNotEmpty &&
+                      foreignController.text.isNotEmpty) {
+                    await insertSentence(
+                      nativeController.text,
+                      foreignController.text,
+                    );
+                    nativeController.clear();
+                    foreignController.clear();
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Data processing')),
+                      SnackBar(content: Text('Sentence was added')),
                     );
                   }
                 },
-                child: const Text("Send"),
+                child: const Text("Submit"),
               ),
             ),
           ],
