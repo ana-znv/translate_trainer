@@ -114,7 +114,10 @@ class _AddSentenceState extends State<AddSentence> {
                     );
                   }
                 },
-                child: const Text("Submit"),
+                child: Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
               ),
             ),
           ],
