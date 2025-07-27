@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:translate_trainer/data/database_helper.dart';
+import 'package:translate_trainer/models/sentence_model/sentence.dart';
 
 class AddSentence extends StatefulWidget {
   const AddSentence({super.key});
@@ -12,37 +14,34 @@ class AddSentence extends StatefulWidget {
 class _AddSentenceState extends State<AddSentence> {
   final _formKey = GlobalKey<FormState>();
 
-  late Database db;
   final nativeController = TextEditingController();
   final foreignController = TextEditingController();
+  final dbHelper = DatabaseHelper.instance;
+
+  List<Sentence> sentences = [];
 
   @override
   void initState() {
     super.initState();
-    initDb();
+    loadSentences();
   }
 
-  Future<void> initDb() async {
-    db = await openDatabase(
-      join(await getDatabasesPath(), 'sentence_database.db'),
+  Future<void> loadSentences() async {
+    final data = await dbHelper.getAllSentences();
+    setState(() => sentences = data);
+  }
 
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE sentences(id INTEGER PRIMARY KEY, nativeSentence TEXT, foreignSentence TEXT)',
-        );
-      },
-      version: 1,
+  Future<void> addSentence() async {
+    if (nativeController.text.isEmpty || foreignController.text.isEmpty) return;
+
+    final sentence = Sentence(
+      nativeSentence: nativeController.text,
+      foreignSentence: foreignController.text,
     );
-  }
-
-  Future<void> insertSentence(
-    String nativeSentence,
-    String foreignSentence,
-  ) async {
-    await db.insert('sentences', {
-      'nativeSentence': nativeSentence,
-      'foreignSentence': foreignSentence,
-    });
+    await dbHelper.insertSentece(sentence);
+    nativeController.clear();
+    foreignController.clear();
+    await loadSentences();
   }
 
   @override
@@ -99,25 +98,24 @@ class _AddSentenceState extends State<AddSentence> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ElevatedButton(
-                onPressed: () async {
-                  if (nativeController.text.isNotEmpty &&
-                      foreignController.text.isNotEmpty) {
-                    await insertSentence(
-                      nativeController.text,
-                      foreignController.text,
-                    );
-                    nativeController.clear();
-                    foreignController.clear();
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Sentence was added')),
-                    );
-                  }
-                },
+                onPressed: addSentence,
                 child: Text(
                   "Submit",
                   style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
+              ),
+            ),
+            Divider(),
+            Expanded(
+              child: ListView.builder(
+                itemCount: sentences.length,
+                itemBuilder: (context, index) {
+                  final s = sentences[index];
+                  return ListTile(
+                    title: Text(s.nativeSentence),
+                    subtitle: Text(s.foreignSentence),
+                  );
+                },
               ),
             ),
           ],
