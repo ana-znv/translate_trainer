@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:translate_trainer/data/database_helper.dart';
 import 'package:translate_trainer/models/sentence_model/sentence.dart';
@@ -25,6 +23,13 @@ class _ListOfSentencesState extends State<ListOfSentences> {
   Future<void> loadSentences() async {
     final data = await dbHelper.getAllSentences();
     setState(() => sentences = data);
+  }
+
+  void delete(String native, Sentence sentence) {
+    dbHelper.deleteSentence(sentence.nativeSentence);
+    setState(() {
+      sentences.remove(sentence);
+    });
   }
 
   @override
@@ -55,6 +60,14 @@ class _ListOfSentencesState extends State<ListOfSentences> {
                   subtitle: Text(
                     "Foreign: ${i.foreignSentence}",
                     style: theme.textTheme.labelSmall,
+                  ),
+                  trailing: IconButton(
+                    onPressed: () {
+                      delete(i.nativeSentence, i);
+                    },
+                    icon: Icon(Icons.delete_outline),
+                    color: Colors.white60,
+                    iconSize: 30,
                   ),
                 );
               },

@@ -44,4 +44,10 @@ class DatabaseHelper {
     final result = await db.query('sentences', orderBy: 'id DESC');
     return result.map((map) => Sentence.fromMap(map)).toList();
   }
+
+  Future<void> deleteSentence(String native) async {
+    final db = await instance.database;
+
+    await db.delete('sentences', where: 'nativeSentence = ?', whereArgs: [native]);
+  }
 }
