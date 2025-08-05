@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:translate_trainer/data/database_helper.dart';
 import 'package:translate_trainer/models/sentence_model/sentence.dart';
 
@@ -18,19 +16,6 @@ class _AddSentenceState extends State<AddSentence> {
   final foreignController = TextEditingController();
   final dbHelper = DatabaseHelper.instance;
 
-  List<Sentence> sentences = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadSentences();
-  }
-
-  Future<void> loadSentences() async {
-    final data = await dbHelper.getAllSentences();
-    setState(() => sentences = data);
-  }
-
   Future<void> addSentence() async {
     if (nativeController.text.isEmpty || foreignController.text.isEmpty) return;
 
@@ -41,7 +26,6 @@ class _AddSentenceState extends State<AddSentence> {
     await dbHelper.insertSentece(sentence);
     nativeController.clear();
     foreignController.clear();
-    await loadSentences();
   }
 
   @override
@@ -103,19 +87,6 @@ class _AddSentenceState extends State<AddSentence> {
                   "Submit",
                   style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
-              ),
-            ),
-            Divider(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: sentences.length,
-                itemBuilder: (context, index) {
-                  final s = sentences[index];
-                  return ListTile(
-                    title: Text(s.nativeSentence),
-                    subtitle: Text(s.foreignSentence),
-                  );
-                },
               ),
             ),
           ],
