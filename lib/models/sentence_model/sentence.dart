@@ -1,10 +1,10 @@
 class Sentence {
-  final int? id;
+  final String id;
   final String nativeSentence;
   final String foreignSentence;
 
   const Sentence({
-    this.id,
+    required this.id,
     required this.nativeSentence,
     required this.foreignSentence,
   });
@@ -19,7 +19,7 @@ class Sentence {
 
   factory Sentence.fromMap(Map<String, Object?> map) {
     return Sentence(
-      id: map['id'] as int,
+      id: map['id'] as String,
       nativeSentence: map['nativeSentence'] as String,
       foreignSentence: map['foreignSentence'] as String,
     );

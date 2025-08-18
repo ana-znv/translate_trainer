@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:translate_trainer/data/database_helper.dart';
 import 'package:translate_trainer/models/sentence_model/sentence.dart';
+import 'package:uuid/uuid.dart';
 
 class AddSentence extends StatefulWidget {
   const AddSentence({super.key});
@@ -18,8 +19,11 @@ class _AddSentenceState extends State<AddSentence> {
 
   Future<void> addSentence() async {
     if (nativeController.text.isEmpty || foreignController.text.isEmpty) return;
+    var guid = Uuid();
+    String id = guid.v4();
 
     final sentence = Sentence(
+      id: id,
       nativeSentence: nativeController.text,
       foreignSentence: foreignController.text,
     );

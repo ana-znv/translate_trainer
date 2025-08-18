@@ -23,7 +23,7 @@ class DatabaseHelper {
   Future _createDB(Database db, int version) async {
     await db.execute('''
     CREATE TABLE sentences(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT NOT NULL,
       nativeSentence TEXT NOT NULL,
       foreignSentence TEXT NOT NULL  
     )
@@ -41,13 +41,13 @@ class DatabaseHelper {
 
   Future<List<Sentence>> getAllSentences() async {
     final db = await instance.database;
-    final result = await db.query('sentences', orderBy: 'id DESC');
+    final result = await db.query('sentences', orderBy: 'id');
     return result.map((map) => Sentence.fromMap(map)).toList();
   }
 
-  Future<void> deleteSentence(String native) async {
+  Future<void> deleteSentence(String id) async {
     final db = await instance.database;
 
-    await db.delete('sentences', where: 'nativeSentence = ?', whereArgs: [native]);
+    await db.delete('sentences', where: 'id = ?', whereArgs: [id]);
   }
 }

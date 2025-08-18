@@ -25,7 +25,7 @@ class _ListOfSentencesState extends State<ListOfSentences> {
     setState(() => sentences = data);
   }
 
-  void delete(String native, Sentence sentence) {
+  void delete(Sentence sentence) {
     dbHelper.deleteSentence(sentence.nativeSentence);
     setState(() {
       sentences.remove(sentence);
@@ -63,7 +63,7 @@ class _ListOfSentencesState extends State<ListOfSentences> {
                   ),
                   trailing: IconButton(
                     onPressed: () {
-                      delete(i.nativeSentence, i);
+                      delete(i);
                     },
                     icon: Icon(Icons.delete_outline),
                     color: Colors.white60,
