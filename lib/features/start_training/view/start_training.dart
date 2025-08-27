@@ -44,7 +44,9 @@ class _StartTrainingState extends State<StartTraining> {
   @override
   Widget build(BuildContext context) {
     if (sentences.isEmpty) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(child: Text("You do not have any sentences to train")),
+      );
     }
 
     Sentence rndSentence = getRandomSentence();
@@ -85,7 +87,12 @@ class _StartTrainingState extends State<StartTraining> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (controller.text == foreign) {
-                        dbHelper.deleteSentence(rndSentence.id);
+                        setState(() {
+                          dbHelper.deleteSentence(rndSentence.id);
+                          setState(() {
+                            sentences.remove(rndSentence);
+                          });
+                        });
                       } else {
                         showDialog<String>(
                           context: context,
