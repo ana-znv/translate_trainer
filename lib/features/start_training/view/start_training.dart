@@ -22,6 +22,14 @@ class _StartTrainingState extends State<StartTraining> {
     loadSentences();
   }
 
+  final controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   Future<void> loadSentences() async {
     final data = await dbHelper.getAllSentences();
     setState(() => sentences = data);
@@ -39,7 +47,9 @@ class _StartTrainingState extends State<StartTraining> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    Sentence sentenceForTest = getRandomSentence();
+    Sentence rndSentence = getRandomSentence();
+    String native = rndSentence.nativeSentence;
+    String foreign = rndSentence.foreignSentence;
 
     final theme = Theme.of(context);
     return Scaffold(
@@ -48,8 +58,54 @@ class _StartTrainingState extends State<StartTraining> {
       ),
       body: Column(
         children: [
-          Text(sentenceForTest.nativeSentence),
-          Text(sentenceForTest.foreignSentence),
+          Padding(padding: EdgeInsets.only(top: 15)),
+          Center(child: Text(native)),
+          Padding(padding: EdgeInsets.only(top: 30)),
+          Container(
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: TextField(
+                    controller: controller,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    maxLines: null,
+                    style: theme.textTheme.labelMedium,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Foreign Sentence',
+                      hintStyle: theme.textTheme.labelSmall,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (controller.text == foreign) {
+                        dbHelper.deleteSentence(rndSentence.id);
+                      } else {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext cont) => AlertDialog(
+                            title: const Text("Title"),
+                            content: const Text("Wrong"),
+                          ),
+                        );
+                      }
+                      controller.clear();
+                    },
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

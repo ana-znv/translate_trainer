@@ -26,7 +26,7 @@ class _ListOfSentencesState extends State<ListOfSentences> {
   }
 
   void delete(Sentence sentence) {
-    dbHelper.deleteSentence(sentence.nativeSentence);
+    dbHelper.deleteSentence(sentence.id);
     setState(() {
       sentences.remove(sentence);
     });
