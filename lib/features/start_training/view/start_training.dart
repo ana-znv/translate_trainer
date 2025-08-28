@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:translate_trainer/data/database_helper.dart';
 import 'package:translate_trainer/models/sentence_model/sentence.dart';
 
+
+
 class StartTraining extends StatefulWidget {
   const StartTraining({super.key});
 
