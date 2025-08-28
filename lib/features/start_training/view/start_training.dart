@@ -23,7 +23,6 @@ class _StartTrainingState extends State<StartTraining> {
   }
 
   final controller = TextEditingController();
-
   @override
   void dispose() {
     controller.dispose();
