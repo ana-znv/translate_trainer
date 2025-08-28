@@ -43,7 +43,7 @@ class _AddSentenceState extends State<AddSentence> {
         key: _formKey,
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.only(top: 40)),
+            SizedBox(height: 40),
             Container(
               alignment: Alignment.topCenter,
               child: SizedBox(
@@ -63,7 +63,7 @@ class _AddSentenceState extends State<AddSentence> {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: 20)),
+            SizedBox(height: 20),
             Container(
               alignment: Alignment.topCenter,
               child: SizedBox(

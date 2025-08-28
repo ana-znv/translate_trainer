@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:translate_trainer/data/database_helper.dart';
 import 'package:translate_trainer/models/sentence_model/sentence.dart';
 
-
-
 class StartTraining extends StatefulWidget {
   const StartTraining({super.key});
 
@@ -17,7 +15,7 @@ class _StartTrainingState extends State<StartTraining> {
   final dbHelper = DatabaseHelper.instance;
 
   List<Sentence> sentences = [];
-
+  Sentence? currentSentence;
   @override
   void initState() {
     super.initState();
@@ -35,12 +33,37 @@ class _StartTrainingState extends State<StartTraining> {
   Future<void> loadSentences() async {
     final data = await dbHelper.getAllSentences();
     setState(() => sentences = data);
+    if (sentences.isNotEmpty) {
+      currentSentence = getRandomSentence();
+    }
   }
 
+  final Random _random = Random();
   Sentence getRandomSentence() {
-    Random random = Random();
-    int index = random.nextInt(sentences.length);
+    int index = _random.nextInt(sentences.length);
     return sentences[index];
+  }
+
+  void _showErrorDialog() {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext cont) => AlertDialog(
+        title: const Text("Title"),
+        content: const Text("Wrong"),
+      ),
+    );
+  }
+
+  void _checkAnswer(Sentence sentence) {
+    if (controller.text == sentence.foreignSentence) {
+      dbHelper.deleteSentence(sentence.id);
+      setState(() {
+        sentences.remove(sentence);
+      });
+    } else {
+      _showErrorDialog();
+    }
+    controller.clear();
   }
 
   @override
@@ -53,7 +76,6 @@ class _StartTrainingState extends State<StartTraining> {
 
     Sentence rndSentence = getRandomSentence();
     String native = rndSentence.nativeSentence;
-    String foreign = rndSentence.foreignSentence;
 
     final theme = Theme.of(context);
     return Scaffold(
@@ -62,9 +84,9 @@ class _StartTrainingState extends State<StartTraining> {
       ),
       body: Column(
         children: [
-          Padding(padding: EdgeInsets.only(top: 15)),
+          SizedBox(height: 15),
           Center(child: Text(native)),
-          Padding(padding: EdgeInsets.only(top: 30)),
+          SizedBox(height: 30),
           Container(
             alignment: Alignment.topCenter,
             child: Column(
@@ -87,23 +109,7 @@ class _StartTrainingState extends State<StartTraining> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (controller.text == foreign) {
-                          dbHelper.deleteSentence(rndSentence.id);
-                          setState(() {
-                            sentences.remove(rndSentence);
-                          });
-                      } else {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext cont) => AlertDialog(
-                            title: const Text("Title"),
-                            content: const Text("Wrong"),
-                          ),
-                        );
-                      }
-                      controller.clear();
-                    },
+                    onPressed: () => _checkAnswer(rndSentence),
                     child: Text(
                       "Submit",
                       style: TextStyle(color: Colors.white70, fontSize: 16),
