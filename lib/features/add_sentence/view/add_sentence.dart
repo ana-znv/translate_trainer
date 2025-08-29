@@ -47,7 +47,7 @@ class _AddSentenceState extends State<AddSentence> {
             Container(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: 400,
+                width: MediaQuery.of(context).size.width * 0.9,
                 child: TextField(
                   controller: nativeController,
                   autocorrect: false,
@@ -67,7 +67,7 @@ class _AddSentenceState extends State<AddSentence> {
             Container(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                width: 400,
+                width: MediaQuery.of(context).size.width * 0.9,
                 child: TextField(
                   controller: foreignController,
                   autocorrect: false,

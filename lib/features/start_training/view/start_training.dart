@@ -73,7 +73,10 @@ class _StartTrainingState extends State<StartTraining> {
   @override
   Widget build(BuildContext context) {
     if (sentences.isEmpty || currentSentence == null) {
-      return const Scaffold(
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("There is no sentences", style: Theme.of(context).textTheme.titleMedium),
+        ),
         body: Center(child: Text("You do not have any sentences to train")),
       );
     }
@@ -95,7 +98,7 @@ class _StartTrainingState extends State<StartTraining> {
             child: Column(
               children: [
                 SizedBox(
-                  width: 400,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   child: TextField(
                     controller: controller,
                     autocorrect: false,
