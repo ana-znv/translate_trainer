@@ -53,11 +53,16 @@ class _StartTrainingState extends State<StartTraining> {
     );
   }
 
-  void _checkAnswer(Sentence sentence) {
-    if (controller.text == sentence.foreignSentence) {
-      dbHelper.deleteSentence(sentence.id);
+  void _checkAnswer() {
+    if (controller.text == currentSentence!.foreignSentence) {
       setState(() {
-        sentences.remove(sentence);
+        dbHelper.deleteSentence(currentSentence!.id);
+        sentences.remove(currentSentence);
+        if (sentences.isNotEmpty) {
+          currentSentence = getRandomSentence();
+        } else {
+          currentSentence = null;
+        }
       });
     } else {
       _showErrorDialog();
@@ -67,14 +72,13 @@ class _StartTrainingState extends State<StartTraining> {
 
   @override
   Widget build(BuildContext context) {
-    if (sentences.isEmpty) {
+    if (sentences.isEmpty || currentSentence == null) {
       return const Scaffold(
         body: Center(child: Text("You do not have any sentences to train")),
       );
     }
 
-    Sentence rndSentence = getRandomSentence();
-    String native = rndSentence.nativeSentence;
+    String native = currentSentence!.nativeSentence;
 
     final theme = Theme.of(context);
     return Scaffold(
@@ -108,7 +112,7 @@ class _StartTrainingState extends State<StartTraining> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: ElevatedButton(
-                    onPressed: () => _checkAnswer(rndSentence),
+                    onPressed: () => _checkAnswer(),
                     child: Text(
                       "Submit",
                       style: TextStyle(color: Colors.white70, fontSize: 16),
