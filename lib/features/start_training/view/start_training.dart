@@ -53,9 +53,12 @@ class _StartTrainingState extends State<StartTraining> {
     );
   }
 
+  int _rightAnswers = 0;
   void _checkAnswer() {
-    if (controller.text == currentSentence!.foreignSentence) {
+    controller.text = controller.text.toLowerCase().trim();
+    if (controller.text == currentSentence!.foreignSentence.toLowerCase().trim()) {
       setState(() {
+        _rightAnswers++;
         dbHelper.deleteSentence(currentSentence!.id);
         sentences.remove(currentSentence);
         if (sentences.isNotEmpty) {
@@ -125,6 +128,10 @@ class _StartTrainingState extends State<StartTraining> {
               ],
             ),
           ),
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: Text("Right answers: $_rightAnswers"),
+          )
         ],
       ),
     );
